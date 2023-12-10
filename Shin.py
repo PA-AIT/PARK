@@ -1,84 +1,60 @@
 import imaplib
 import email
-from transformers import pipeline
+import pandas as pd
+import nltk
+from io import BytesIO
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lsa import LsaSummarizer
+import fitz  # PyMuPDF
 import streamlit as st
 
-# Define extract_text_from_pdf function
+# Download NLTK resources
+nltk.download('punkt')
+
+# Streamlit app title
+st.title("Automate2PDF: Simplified Data Transfer")
+
+# Function to extract text from PDF using PyMuPDF
 def extract_text_from_pdf(pdf_bytes):
-    pdf_text = ""
+    pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
+    text = ""
+    for page_num in range(pdf_document.page_count):
+        text += pdf_document[page_num].get_text()
+    return text
+
+# ... (other parts of your code)
+
+if st.button("Fetch and Display PDF Summaries"):
     try:
-        pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
-        for page_number in range(pdf_document.page_count):
-            page = pdf_document[page_number]
-            pdf_text += page.get_text()
-        pdf_document.close()
-    except Exception as e:
-        st.error(f"Error extracting text from PDF: {str(e)}")
-        st.stop()
-    return pdf_text
+        # ... (other parts of your code)
 
-# Streamlit UI
-user = st.text_input("Enter your email address")
-password = st.text_input("Enter your email password", type="password")
-pdf_email_address = st.text_input("Enter the email address to extract PDFs from")
-date_search_criteria = st.text_input("Enter the date in the format 'DD-MMM-YYYY' (e.g., 01-Jan-2023)")
+        info_list = []
 
-if not user or not password:
-    st.error("Please enter both email address and password.")
-    st.stop()
+        # Iterate through messages
+        for num in mail_id_list:
+            # ... (other parts of your code)
 
-# Button for triggering summarization
-summarize_button = st.button("Summarize Emails")
+            for part in msg.walk():
+                if part.get_content_type() == 'application/pdf':
+                    # ... (other parts of your code)
 
-# IMAP connection and email processing
-imap_url = 'imap.gmail.com'
-try:
-    with imaplib.IMAP4_SSL(imap_url) as my_mail:
-        my_mail.login(user, password)
-        st.write(f"Logged in successfully as {user}")
+                    # Summarize each chapter
+                    for i, chapter in enumerate(chapters):
+                        # ... (other parts of your code)
 
-        selected = my_mail.select('inbox')
-        if selected[0] != 'OK':
-            st.error("Error selecting the Inbox.")
-            st.stop()
+                        # Summarize the chapter content
+                        parser = PlaintextParser.from_string(chapter, Tokenizer('english'))
+                        summarizer = LsaSummarizer()
+                        summary = summarizer(parser.document, 3)  # Summarize into 3 sentences
+                        summarized_text = ' '.join(str(sentence) for sentence in summary)
 
-        key = 'FROM'
-        value = pdf_email_address
-        date_criteria = f'SINCE "{date_search_criteria}"'  # Corrected the date format
-
-        # Display summary only if the button is clicked
-        if summarize_button:
-            _, data = my_mail.search(None, key, value, date_criteria)
-            mail_id_list = data[0].split()
-
-            info_list = []
-            summarizer = pipeline("summarization")
-
-            for num in mail_id_list:
-                typ, data = my_mail.fetch(num, '(RFC822)')
-                msg = email.message_from_bytes(data[0][1])
-
-                book_title = msg["Subject"]
-                email_date = msg["Date"]
-
-                for part in msg.walk():
-                    if part.get_content_type() == 'application/pdf':
-                        pdf_bytes = part.get_payload(decode=True)
-                        pdf_text = extract_text_from_pdf(pdf_bytes)
-
-                        # Increase the max_length for better summarization
-                        max_length = min(len(pdf_text) * 2, 1024)  # Limit max_length to avoid very long summaries
-                        summarized_content = summarizer(pdf_text, max_length=max_length)[0]['summary']
-
-                        info = {"Book Title": book_title, "Received Date": email_date,
-                                "Summarized Content": summarized_content}
+                        info = {"Chapter": i + 1, "Summarized Chapter Content": summarized_text, "Received Date": email_date}
                         info_list.append(info)
 
-            for info in info_list:
-                st.subheader(f"{info['Book Title']} - Received Date: {info['Received Date']}")
-                st.write(info["Summarized Content"])
+        # ... (other parts of your code)
 
-except imaplib.IMAP4.error as e:
-    st.error(f"IMAP error occurred: {str(e)}")
-except Exception as e:
-    st.error(f"An error occurred: {str(e)}")
+    except Exception as e:
+        st.error(f"An error occurred during IMAP connection: {str(e)}")
+
+# ... (other parts of your code)
