@@ -4,13 +4,6 @@ import pandas as pd
 import fitz  # PyMuPDF
 from transformers import pipeline
 import streamlit as st
-import base64
-
-# Specify NLTK data path if needed
-# nltk.data.path.append("/path/to/nltk_data")
-
-# Download NLTK data
-# nltk.download('punkt')
 
 # Define extract_text_from_pdf function
 def extract_text_from_pdf(pdf_bytes):
