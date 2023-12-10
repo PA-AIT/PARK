@@ -1,7 +1,5 @@
 import imaplib
 import email
-import pandas as pd
-import fitz  # PyMuPDF
 from transformers import pipeline
 import streamlit as st
 
@@ -24,6 +22,10 @@ user = st.text_input("Enter your email address")
 password = st.text_input("Enter your email password", type="password")
 pdf_email_address = st.text_input("Enter the email address to extract PDFs from")
 date_search_criteria = st.text_input("Enter the date in the format 'DD-MMM-YYYY' (e.g., 01-Jan-2023)")
+
+if not user or not password:
+    st.error("Please enter both email address and password.")
+    st.stop()
 
 # IMAP connection and email processing
 imap_url = 'imap.gmail.com'
