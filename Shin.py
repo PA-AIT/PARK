@@ -31,6 +31,7 @@ def extract_text_from_pdf(pdf_bytes):
 user = st.text_input("Enter your email address")
 password = st.text_input("Enter your email password", type="password")
 pdf_email_address = st.text_input("Enter the email address to extract PDFs from")
+date_search_criteria = st.text_input("Enter the date in the format 'DD-MMM-YYYY' (e.g., 01-Jan-2023)")
 
 # IMAP connection and email processing
 imap_url = 'imap.gmail.com'
@@ -46,8 +47,9 @@ with imaplib.IMAP4_SSL(imap_url) as my_mail:
 
         key = 'FROM'
         value = pdf_email_address
+        date_criteria = f'SINCE {date_search_criteria}'
 
-        _, data = my_mail.search(None, key, value)
+        _, data = my_mail.search(None, key, value, date_criteria)
         mail_id_list = data[0].split()
 
         info_list = []
