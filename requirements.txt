@@ -1,4 +1,6 @@
+imapclient==2.1.0
+nltk==3.6.5
+PyMuPDF==1.18.14
+sumy==0.8.1
 pandas==1.3.3
-nltk==3.6.3
-PyMuPDF==1.18.17
-transformers==4.10.3
+streamlit==1.0.0
