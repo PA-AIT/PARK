@@ -47,7 +47,7 @@ with imaplib.IMAP4_SSL(imap_url) as my_mail:
 
         key = 'FROM'
         value = pdf_email_address
-        date_criteria = f'SINCE {date_search_criteria}'
+        date_criteria = f'SINCE "{date_search_criteria}"'  # Corrected the date format
 
         _, data = my_mail.search(None, key, value, date_criteria)
         mail_id_list = data[0].split()
