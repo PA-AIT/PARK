@@ -4,8 +4,9 @@ import pandas as pd
 import nltk
 from io import BytesIO
 import fitz  # PyMuPDF
-import streamlit as st
-from summarizer import Summarizer  # bert-extractive-summarizer
+import streamlit as st # bert-extractive-summarizer
+from summarizer import Summarizer as BERTSummarizer
+
 
 # Download NLTK resources
 nltk.download('punkt')
