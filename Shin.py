@@ -8,7 +8,7 @@ import streamlit as st
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
-from summarizer import Summarizer  # bert-extractive-summarizer
+from summarizer import Summarizer  # This library uses BERT for summarization
 import PyPDF2
 
 # Download NLTK resources
@@ -25,10 +25,10 @@ def extract_text_from_pdf(pdf_bytes):
         text += pdf_document[page_num].get_text()
     return text
 
-# Function to summarize text using BERT-extractive summarizer
-def summarize_text_bert(text, ratio=0.2):
+# Function to summarize text using BERT-based summarizer
+def summarize_text_bert(text):
     summarizer = Summarizer()
-    summary = summarizer(text, ratio=ratio)
+    summary = summarizer(text)
     return summary
 
 # Create input fields for the user, password, and email address
@@ -82,7 +82,7 @@ if st.button("Fetch and Display PDF Summaries"):
                         pdf_bytes = part.get_payload(decode=True)
                         pdf_text = extract_text_from_pdf(pdf_bytes)
 
-                        # Summarize the PDF content using BERT-extractive summarizer
+                        # Summarize the PDF content using BERT-based summarizer
                         summary = summarize_text_bert(pdf_text)
 
                         info = {"Summarized Content": summary, "Received Date": email_date}
