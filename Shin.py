@@ -5,11 +5,7 @@ import nltk
 from io import BytesIO
 import fitz  # PyMuPDF
 import streamlit as st
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
-from summarizer import Summarizer  # This library uses BERT for summarization
-import PyPDF2
+from summarizer import Summarizer  # bert-extractive-summarizer
 
 # Download NLTK resources
 nltk.download('punkt')
