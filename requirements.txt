@@ -1,6 +1,9 @@
-imapclient==2.1.0
-nltk==3.6.5
-PyMuPDF==1.18.14
-sumy==0.8.1
+imaplib==2.58
+email==6.0.1
 pandas==1.3.3
-streamlit==1.0.0
+nltk==3.6.5
+PyMuPDF==1.18.19
+streamlit==1.17.0
+sumy==0.8.1
+bert-extractive-summarizer==0.7.1
+PyPDF2==1.26.0
